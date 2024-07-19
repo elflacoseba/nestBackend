@@ -13,6 +13,8 @@ import { User } from './entities/user.entity';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces/jwt-payload';
+import { LoginResponse } from './interfaces/login-response';
+import { RegisterUserDto } from './dto/register-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -62,7 +64,16 @@ export class AuthService {
     return `This action removes a #${id} auth`;
   }
 
-  async login(loginDto: LoginDto) {
+  async register(registerUserDto: RegisterUserDto): Promise<LoginResponse> {
+    const user = await this.create(registerUserDto);
+
+    return {
+      user: user,
+      token: this.getJwToken({ id: user._id }),
+    };
+  }
+
+  async login(loginDto: LoginDto): Promise<LoginResponse> {
     const { email, password } = loginDto;
 
     const user = await this.userModel.findOne({ email: email });
@@ -76,7 +87,7 @@ export class AuthService {
 
     return {
       user: rest,
-      toke: this.getJwToken({ id: user.id }),
+      token: this.getJwToken({ id: user.id }),
     };
   }
 

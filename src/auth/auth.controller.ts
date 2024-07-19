@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -18,6 +20,12 @@ export class AuthController {
   @Post()
   create(@Body() createAuthDto: CreateUserDto) {
     return this.authService.create(createAuthDto);
+  }
+
+  @Post('/login')
+  @HttpCode(200)
+  login(@Body() loginDto: LoginDto) {
+    return this.authService.login(loginDto);
   }
 
   @Get()

@@ -47,12 +47,18 @@ export class AuthService {
     }
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  findAll(): Promise<User[]> {
+    return this.userModel.find();
+  }
+
+  async findUserById(id: string) {
+    const user = await this.userModel.findById(id);
+    const { password, ...rest } = user.toJSON();
+    return rest;
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} auth`;
+    return `This action return user #${id} auth`;
   }
 
   update(id: number, updateAuthDto: UpdateAuthDto) {
